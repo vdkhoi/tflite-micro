@@ -158,7 +158,7 @@ TfLiteStatus PopulateQuantizedLstmParams8x8_16(
   const bool use_projection = (projection_weights != nullptr);
 
   // Get intermediate scales and zero points.
-  float intermediate_scale[5];
+  double intermediate_scale[5];
   int32_t intermediate_zp[5];
   for (int i = 0; i < 4; ++i) {
     if (use_layer_norm) {
@@ -192,41 +192,41 @@ TfLiteStatus PopulateQuantizedLstmParams8x8_16(
   }
 
   // Scales.
-  const float default_scale = 1.0;
-  float input_scale = default_scale;
-  float input_to_input_weight_scale = default_scale;
-  float recurrent_to_input_weight_scale = default_scale;
-  float cell_to_input_weight_scale = default_scale;
-  float input_to_forget_weight_scale = default_scale;
-  float recurrent_to_forget_weight_scale = default_scale;
-  float cell_to_forget_weight_scale = default_scale;
-  float input_to_cell_weight_scale = default_scale;
-  float recurrent_to_cell_weight_scale = default_scale;
-  float input_to_output_weight_scale = default_scale;
-  float recurrent_to_output_weight_scale = default_scale;
-  float cell_to_output_weight_scale = default_scale;
-  float projection_weight_scale = default_scale;
-  float layer_norm_input_scale = default_scale;
-  float layer_norm_forget_scale = default_scale;
-  float layer_norm_cell_scale = default_scale;
-  float layer_norm_output_scale = default_scale;
-  float output_state_scale = default_scale;
+  const double default_scale = 1.0;
+  double input_scale = default_scale;
+  double input_to_input_weight_scale = default_scale;
+  double recurrent_to_input_weight_scale = default_scale;
+  double cell_to_input_weight_scale = default_scale;
+  double input_to_forget_weight_scale = default_scale;
+  double recurrent_to_forget_weight_scale = default_scale;
+  double cell_to_forget_weight_scale = default_scale;
+  double input_to_cell_weight_scale = default_scale;
+  double recurrent_to_cell_weight_scale = default_scale;
+  double input_to_output_weight_scale = default_scale;
+  double recurrent_to_output_weight_scale = default_scale;
+  double cell_to_output_weight_scale = default_scale;
+  double projection_weight_scale = default_scale;
+  double layer_norm_input_scale = default_scale;
+  double layer_norm_forget_scale = default_scale;
+  double layer_norm_cell_scale = default_scale;
+  double layer_norm_output_scale = default_scale;
+  double output_state_scale = default_scale;
   int cell_scale = 1;
 
   // Effective scales.
-  float effective_input_to_input_scale = default_scale;
-  float effective_recurrent_to_input_scale = default_scale;
-  float effective_cell_to_input_scale = default_scale;
-  float effective_input_to_forget_scale = default_scale;
-  float effective_recurrent_to_forget_scale = default_scale;
-  float effective_cell_to_forget_scale = default_scale;
-  float effective_input_to_cell_scale = default_scale;
-  float effective_recurrent_to_cell_scale = default_scale;
-  float effective_input_to_output_scale = default_scale;
-  float effective_recurrent_to_output_scale = default_scale;
-  float effective_cell_to_output_scale = default_scale;
-  float effective_proj_scale = default_scale;
-  float effective_hidden_scale = default_scale;
+  double effective_input_to_input_scale = default_scale;
+  double effective_recurrent_to_input_scale = default_scale;
+  double effective_cell_to_input_scale = default_scale;
+  double effective_input_to_forget_scale = default_scale;
+  double effective_recurrent_to_forget_scale = default_scale;
+  double effective_cell_to_forget_scale = default_scale;
+  double effective_input_to_cell_scale = default_scale;
+  double effective_recurrent_to_cell_scale = default_scale;
+  double effective_input_to_output_scale = default_scale;
+  double effective_recurrent_to_output_scale = default_scale;
+  double effective_cell_to_output_scale = default_scale;
+  double effective_proj_scale = default_scale;
+  double effective_hidden_scale = default_scale;
 
   // Populate scales.
   if (!use_cifg) {
@@ -304,100 +304,100 @@ TfLiteStatus PopulateQuantizedLstmParams8x8_16(
   if (use_peephole) {
     if (!use_cifg) {
       effective_cell_to_input_scale =
-          std::pow(2.0f, static_cast<float>(cell_scale)) *
+          std::pow(2.0, static_cast<double>(cell_scale)) *
           cell_to_input_weight_scale / intermediate_scale[0];
     }
     effective_cell_to_forget_scale =
-        std::pow(2.0f, static_cast<float>(cell_scale)) *
+        std::pow(2.0, static_cast<double>(cell_scale)) *
         cell_to_forget_weight_scale / intermediate_scale[1];
     effective_cell_to_output_scale =
-        std::pow(2.0f, static_cast<float>(cell_scale)) *
+        std::pow(2.0, static_cast<double>(cell_scale)) *
         cell_to_output_weight_scale / intermediate_scale[3];
   }
 
   // Decompose scales.
   int shift_output;
-  QuantizeMultiplier(static_cast<double>(effective_input_to_input_scale),
+  QuantizeMultiplier(effective_input_to_input_scale,
                      &integer_lstm_param->effective_input_to_input_scale_a,
                      &shift_output);
   integer_lstm_param->effective_input_to_input_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_recurrent_to_input_scale),
+  QuantizeMultiplier(effective_recurrent_to_input_scale,
                      &integer_lstm_param->effective_recurrent_to_input_scale_a,
                      &shift_output);
   integer_lstm_param->effective_recurrent_to_input_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_cell_to_input_scale),
+  QuantizeMultiplier(effective_cell_to_input_scale,
                      &integer_lstm_param->effective_cell_to_input_scale_a,
                      &shift_output);
   integer_lstm_param->effective_cell_to_input_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_input_to_forget_scale),
+  QuantizeMultiplier(effective_input_to_forget_scale,
                      &integer_lstm_param->effective_input_to_forget_scale_a,
                      &shift_output);
   integer_lstm_param->effective_input_to_forget_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_recurrent_to_forget_scale),
+  QuantizeMultiplier(effective_recurrent_to_forget_scale,
                      &integer_lstm_param->effective_recurrent_to_forget_scale_a,
                      &shift_output);
   integer_lstm_param->effective_recurrent_to_forget_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_cell_to_forget_scale),
+  QuantizeMultiplier(effective_cell_to_forget_scale,
                      &integer_lstm_param->effective_cell_to_forget_scale_a,
                      &shift_output);
   integer_lstm_param->effective_cell_to_forget_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_input_to_cell_scale),
+  QuantizeMultiplier(effective_input_to_cell_scale,
                      &integer_lstm_param->effective_input_to_cell_scale_a,
                      &shift_output);
   integer_lstm_param->effective_input_to_cell_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_recurrent_to_cell_scale),
+  QuantizeMultiplier(effective_recurrent_to_cell_scale,
                      &integer_lstm_param->effective_recurrent_to_cell_scale_a,
                      &shift_output);
   integer_lstm_param->effective_recurrent_to_cell_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_input_to_output_scale),
+  QuantizeMultiplier(effective_input_to_output_scale),
                      &integer_lstm_param->effective_input_to_output_scale_a,
                      &shift_output);
   integer_lstm_param->effective_input_to_output_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_recurrent_to_output_scale),
+  QuantizeMultiplier(effective_recurrent_to_output_scale,
                      &integer_lstm_param->effective_recurrent_to_output_scale_a,
                      &shift_output);
   integer_lstm_param->effective_recurrent_to_output_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_cell_to_output_scale),
+  QuantizeMultiplier(effective_cell_to_output_scale,
                      &integer_lstm_param->effective_cell_to_output_scale_a,
                      &shift_output);
   integer_lstm_param->effective_cell_to_output_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_proj_scale),
+  QuantizeMultiplier(effective_proj_scale),
                      &integer_lstm_param->effective_proj_scale_a,
                      &shift_output);
   integer_lstm_param->effective_proj_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(effective_hidden_scale),
+  QuantizeMultiplier(effective_hidden_scale,
                      &integer_lstm_param->effective_hidden_scale_a,
                      &shift_output);
   integer_lstm_param->effective_hidden_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(layer_norm_input_scale),
+  QuantizeMultiplier(layer_norm_input_scale,
                      &integer_lstm_param->layer_norm_input_scale_a,
                      &shift_output);
   integer_lstm_param->layer_norm_input_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(layer_norm_forget_scale),
+  QuantizeMultiplier(layer_norm_forget_scale,
                      &integer_lstm_param->layer_norm_forget_scale_a,
                      &shift_output);
   integer_lstm_param->layer_norm_forget_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(layer_norm_cell_scale),
+  QuantizeMultiplier(layer_norm_cell_scale,
                      &integer_lstm_param->layer_norm_cell_scale_a,
                      &shift_output);
   integer_lstm_param->layer_norm_cell_scale_b =
       static_cast<int32_t>(shift_output);
-  QuantizeMultiplier(static_cast<double>(layer_norm_output_scale),
+  QuantizeMultiplier(layer_norm_output_scale,
                      &integer_lstm_param->layer_norm_output_scale_a,
                      &shift_output);
   integer_lstm_param->layer_norm_output_scale_b =
